@@ -1,17 +1,41 @@
-
-
 import pywt
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io.wavfile as wav
 
 class Wavelet:
+    """
+    Waveletクラスは、wavファイルから取得されたサンプリングレートと音声データに対してウェーブレット変換を行います。
+    このクラスは、gaus5（Complex Gaussian mother wavelet）を変換窓として使用します。
+
+    Attributes:
+        sample_rate (int): サンプリング周波数。
+        data (np.ndarray): 音声データの配列。
+
+    Methods:
+        generate_coefficients(): ウェーブレット変換の係数と周波数を計算し、返します。
+        plot_spectrogram(): 音声データのウェーブレット変換スペクトログラムをプロットします。
+    """
+    
     def __init__(self, sample_rate, data):
+        """
+        Waveletクラスのコンストラクタ。
+
+        Args:
+            sample_rate (int): サンプリング周波数。
+            data (np.ndarray): 音声データの配列。
+        """
         self.sample_rate = sample_rate
         self.data = data
-    def generate_spectrogram(self):
-        # 音声ファイルを読み込む
-        
+
+    def generate_coefficients(self):
+        """
+        ウェーブレット変換を実行し、変換係数と対応する周波数を返します。
+
+        Returns:
+            np.ndarray: ウェーブレット変換係数の配列。
+            np.ndarray: 対応する周波数の配列。
+        """
         # ステレオ音声の場合、モノラルに変換
         if len(self.data.shape) > 1:
             self.data = self.data.mean(axis=1)
@@ -22,14 +46,15 @@ class Wavelet:
 
         # 連続ウェーブレット変換を実行
         self.coefficients, self.frequencies = pywt.cwt(self.data, self.scales, wavelet, 1.0 / self.sample_rate)
-        print(self.coefficients, self.frequencies)
         return self.coefficients, self.frequencies
     
     def plot_spectrogram(self):
-        # スペクトログラムを表示
+        """
+        ウェーブレット変換による音声データのスペクトログラムをプロットします。
+        """
         plt.figure(figsize=(10, 6))
         plt.imshow(np.abs(self.coefficients), extent=[0, len(self.data) / self.sample_rate, 1, self.scales[-1]], cmap='PRGn', aspect='auto',
-                vmax=abs(self.coefficients).max(), vmin=-abs(self.coefficients).max())
+                   vmax=abs(self.coefficients).max(), vmin=-abs(self.coefficients).max())
         plt.ylabel('Scale')
         plt.xlabel('Time (sec)')
         plt.title('Wavelet Transform (Spectrogram) of Audio')
@@ -39,5 +64,5 @@ class Wavelet:
 if __name__ == "__main__":
     sample_rate, data = wav.read('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset\\swallowing1.wav')
     swallowing1 = Wavelet(sample_rate, data)
-    swallowing1.generate_spectrogram()
+    swallowing1.generate_coefficients()
     swallowing1.plot_spectrogram()
