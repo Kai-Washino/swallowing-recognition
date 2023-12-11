@@ -53,8 +53,12 @@ class Wavelet:
         ウェーブレット変換による音声データのスペクトログラムをプロットします。
         """
         plt.figure(figsize=(10, 6))
-        plt.imshow(np.abs(self.coefficients), extent=[0, len(self.data) / self.sample_rate, 1, self.scales[-1]], cmap='PRGn', aspect='auto',
-                   vmax=abs(self.coefficients).max(), vmin=-abs(self.coefficients).max())
+        # plt.imshow(np.abs(self.coefficients), extent=[0, len(self.data) / self.sample_rate, 1, self.scales[-1]], cmap='PRGn', aspect='auto',
+        #            vmax=abs(self.coefficients).max(), vmin=-abs(self.coefficients).max())
+
+        plt.imshow(np.abs(self.coefficients), extent=[0, 1, 1, 150], cmap='PRGn', aspect='auto',
+                   vmax=50000, vmin=-50000)
+        
         plt.ylabel('Scale')
         plt.xlabel('Time (sec)')
         plt.title('Wavelet Transform (Spectrogram) of Audio')
