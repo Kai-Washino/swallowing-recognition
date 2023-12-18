@@ -15,7 +15,7 @@ class DanceNet:
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     def training(self, train_data, train_labels):
-        self.model.fit(train_data, train_labels, epochs=, validation_split=0.1)
+        self.model.fit(train_data, train_labels, epochs=54, validation_split=0.1, batch_size= 18)
 
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
@@ -60,8 +60,11 @@ if __name__ == "__main__":
     print(len(voice_files))
     print(len(cough_files))
     print(len(swallowing_files))
-    train_data = DataSet(90, 224, 224, 3, 3)
-    test_data = DataSet(9, 224, 224, 3, 3)
+
+    test_num = 3
+
+    train_data = DataSet(len(voice_files) + len(cough_files) + len(swallowing_files) - test_num * 3, 224, 224, 3, 3)
+    test_data = DataSet(test_num * 3, 224, 224, 3, 3)
     
     for i, file_name in enumerate(swallowing_files):
         label = np.array([0, 0, 1])
@@ -72,7 +75,9 @@ if __name__ == "__main__":
         if(i < 3):
             test_data.add_to_dataset(i, coefficients, label)
         else:
-            train_data.add_to_dataset(i - 3, coefficients, label)
+            train_data.add_to_dataset((i - test_num) *test_num, coefficients, label)
+            # train_data.add_to_dataset((i - 3) * 2, coefficients, label)
+            # train_data.add_to_dataset((i - 3) * 2 + 1, coefficients, label)
         
     
     for i, file_name in enumerate(cough_files):
@@ -81,10 +86,12 @@ if __name__ == "__main__":
         wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
         coefficients, _ =  wavdata.generate_coefficients()
         # train_data.add_to_dataset(i + 30, coefficients, label)
-        if(i < 3):
-            test_data.add_to_dataset(i + 3, coefficients, label)
+        if(i < test_num):
+            test_data.add_to_dataset(i + test_num, coefficients, label)
         else:
-            train_data.add_to_dataset(i - 3 + 27, coefficients, label)
+            train_data.add_to_dataset((i - test_num) * test_num + 1, coefficients, label)
+        #     train_data.add_to_dataset((i - 3 + 27) * 2, coefficients, label)
+        #     train_data.add_to_dataset((i - 3 + 27) * 2 + 1, coefficients, label)
 
     for i, file_name in enumerate(voice_files):
         label = np.array([1, 0, 0])
@@ -92,10 +99,12 @@ if __name__ == "__main__":
         wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
         coefficients, _ =  wavdata.generate_coefficients()
         # train_data.add_to_dataset(i + 60, coefficients, label)
-        if(i < 3):
-            test_data.add_to_dataset(i + 6, coefficients, label)
+        if(i < test_num):
+            test_data.add_to_dataset(i + test_num * 2, coefficients, label)
         else:
-            train_data.add_to_dataset(i - 3 + 54, coefficients, label)
+            train_data.add_to_dataset((i - test_num) * test_num + 2, coefficients, label)
+            # train_data.add_to_dataset((i - 3 + 54) * 2, coefficients, label)
+            # train_data.add_to_dataset((i - 3 + 54) * 2 + 1, coefficients, label)
 
     
     print(train_data.labels.shape)

@@ -15,8 +15,12 @@ class DataSet:
 
     def add_to_dataset(self, i, coefficients, label):
         spectrogram = np.abs(coefficients)
-        resized_spectrogram = cv2.resize(spectrogram, (self.img_width, self.img_height))
+        min_val = spectrogram.min()
+        max_val = spectrogram.max()
+        normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)
+        resized_spectrogram = cv2.resize(normalized_spectrogram, (self.img_width, self.img_height))
         resized_spectrogram_uint8 = (resized_spectrogram * 255).astype(np.uint8)
+
 
         # グレースケール画像をRGBに変換
         resized_spectrogram_rgb = cv2.cvtColor(resized_spectrogram_uint8, cv2.COLOR_GRAY2RGB)
