@@ -2,6 +2,9 @@ import numpy as np
 import cv2  # OpenCVライブラリ
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
+from audio import Audio
+from wavelet import Wavelet
+import os
 
 class DataSet:
     def __init__(self, num_samples, img_height, img_width, channels, num_class, ):
@@ -21,13 +24,28 @@ class DataSet:
         resized_spectrogram = cv2.resize(normalized_spectrogram, (self.img_width, self.img_height))
         resized_spectrogram_uint8 = (resized_spectrogram * 255).astype(np.uint8)
 
-
         # グレースケール画像をRGBに変換
         resized_spectrogram_rgb = cv2.cvtColor(resized_spectrogram_uint8, cv2.COLOR_GRAY2RGB)
     
         # データセットに追加
         self.data[i] = resized_spectrogram_rgb
         self.labels[i] = label
+    
+    def get_wav_files(self, directory):
+        wav_files = []
+        for filename in os.listdir(directory):
+            if filename.endswith(".wav"):
+                wav_files.append(filename)
+        return wav_files
+
+    def folder_to_dataset(self, folder_name, label, start_num):        
+        file_names = self.get_wav_files(folder_name)
+        for i, file_name in enumerate(file_names):
+            label = np.array([0, 0, 1])
+            wav = Audio(folder_name + '\\' + file_name)
+            wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
+            coefficients, _ =  wavdata.generate_coefficients()
+            self.add_to_dataset(start_num + i * self.num_class, coefficients, label)
 
     def print_label(self): 
         print(self.labels)
