@@ -15,7 +15,7 @@ class DanceNet:
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     def training(self, train_data, train_labels):
-        self.model.fit(train_data, train_labels, epochs=54, validation_split=0.1, batch_size= 18)
+        self.model.fit(train_data, train_labels, epochs=54, validation_split=0.1, batch_size= 9)
 
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
@@ -37,78 +37,35 @@ class DanceNet:
 
 
 
-from audio import Audio
-from wavelet import Wavelet
+
 from dataset import DataSet
-import os
 import numpy as np
 
-def get_wav_files(directory):
-    
-    wav_files = []
-    for filename in os.listdir(directory):
-        if filename.endswith(".wav"):
-            wav_files.append(filename)
-    return wav_files
+
+
 
 if __name__ == "__main__":
     directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset'
-    voice_files = get_wav_files(directory_path + '\\voice')
-    cough_files = get_wav_files(directory_path + '\\cough')
-    swallowing_files = get_wav_files(directory_path + '\\swallowing')
+   
+    train_voice_folder = directory_path + '\\washino\\voice'
+    train_cough_folder = directory_path + '\\washino\\cough'
+    train_swallowing_folder = directory_path + '\\washino\\swallowing'    
 
-    print(len(voice_files))
-    print(len(cough_files))
-    print(len(swallowing_files))
-
-    test_num = 3
-
-    train_data = DataSet(len(voice_files) + len(cough_files) + len(swallowing_files) - test_num * 3, 224, 224, 3, 3)
-    test_data = DataSet(test_num * 3, 224, 224, 3, 3)
+    test_voice_folder = directory_path + '\\shibata\\voice'
+    test_cough_folder = directory_path + '\\shibata\\cough'
+    test_swallowing_folder = directory_path + '\\shibata\\swallowing'    
     
-    for i, file_name in enumerate(swallowing_files):
-        label = np.array([0, 0, 1])
-        wav = Audio(directory_path + '\\swallowing\\' + file_name)
-        wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
-        coefficients, _ =  wavdata.generate_coefficients()
-        # train_data.add_to_dataset(i, coefficients, label)
-        if(i < 3):
-            test_data.add_to_dataset(i, coefficients, label)
-        else:
-            train_data.add_to_dataset((i - test_num) *test_num, coefficients, label)
-            # train_data.add_to_dataset((i - 3) * 2, coefficients, label)
-            # train_data.add_to_dataset((i - 3) * 2 + 1, coefficients, label)
-        
-    
-    for i, file_name in enumerate(cough_files):
-        label = np.array([0, 1, 0])
-        wav = Audio(directory_path + '\\cough\\' + file_name)
-        wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
-        coefficients, _ =  wavdata.generate_coefficients()
-        # train_data.add_to_dataset(i + 30, coefficients, label)
-        if(i < test_num):
-            test_data.add_to_dataset(i + test_num, coefficients, label)
-        else:
-            train_data.add_to_dataset((i - test_num) * test_num + 1, coefficients, label)
-        #     train_data.add_to_dataset((i - 3 + 27) * 2, coefficients, label)
-        #     train_data.add_to_dataset((i - 3 + 27) * 2 + 1, coefficients, label)
+    train_data = DataSet(159, 224, 224, 3, 3)
+    test_data = DataSet(9, 224, 224, 3, 3)
 
-    for i, file_name in enumerate(voice_files):
-        label = np.array([1, 0, 0])
-        wav = Audio(directory_path + '\\voice\\' + file_name)
-        wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
-        coefficients, _ =  wavdata.generate_coefficients()
-        # train_data.add_to_dataset(i + 60, coefficients, label)
-        if(i < test_num):
-            test_data.add_to_dataset(i + test_num * 2, coefficients, label)
-        else:
-            train_data.add_to_dataset((i - test_num) * test_num + 2, coefficients, label)
-            # train_data.add_to_dataset((i - 3 + 54) * 2, coefficients, label)
-            # train_data.add_to_dataset((i - 3 + 54) * 2 + 1, coefficients, label)
+    train_data.folder_to_dataset(train_swallowing_folder, np.array([0, 0, 1]), 0)
+    train_data.folder_to_dataset(train_cough_folder, np.array([0, 1, 0]), 1)
+    train_data.folder_to_dataset(train_voice_folder, np.array([1, 0, 0]), 2)
 
-    
-    print(train_data.labels.shape)
-    print(train_data.data.shape)
+    test_data.folder_to_dataset(test_swallowing_folder, np.array([0, 0, 1]), 0)
+    test_data.folder_to_dataset(test_cough_folder, np.array([0, 1, 0]), 1)
+    test_data.folder_to_dataset(test_voice_folder, np.array([1, 0, 0]), 2)
+
     model = DanceNet(3)
     model.training(train_data.data, train_data.labels)
     model.evaluate(test_data.data, test_data.labels)
