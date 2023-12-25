@@ -15,7 +15,7 @@ class DanceNet:
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     def training(self, train_data, train_labels):
-        self.model.fit(train_data, train_labels, epochs=54, validation_split=0.1, batch_size= 9)
+        self.model.fit(train_data, train_labels, epochs=10, validation_split=0.1, batch_size= 9)
 
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
@@ -69,6 +69,7 @@ if __name__ == "__main__":
     model = DanceNet(3)
     model.training(train_data.data, train_data.labels)
     model.evaluate(test_data.data, test_data.labels)
+    model.save('20231225_159datasets')
     
     
     
