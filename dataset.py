@@ -41,7 +41,6 @@ class DataSet:
     def folder_to_dataset(self, folder_name, label, start_num):        
         file_names = self.get_wav_files(folder_name)
         for i, file_name in enumerate(file_names):
-            label = np.array([0, 0, 1])
             wav = Audio(folder_name + '\\' + file_name)
             wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
             coefficients, _ =  wavdata.generate_coefficients()
