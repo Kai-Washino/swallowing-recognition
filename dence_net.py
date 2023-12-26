@@ -36,15 +36,8 @@ class DanceNet:
     def save(self, file_name):
         self.model.save(file_name)
 
-
-
-
-
 from dataset import DataSet
 import numpy as np
-
-
-
 
 if __name__ == "__main__":
     directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset'
@@ -72,9 +65,3 @@ if __name__ == "__main__":
     model.training(train_data.data, train_data.labels)
     model.evaluate(test_data.data, test_data.labels)
     model.save('20231225_159datasets.keras')
-    
-    
-    
-
-
-

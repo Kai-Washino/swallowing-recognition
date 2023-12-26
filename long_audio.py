@@ -47,7 +47,6 @@ class Long_audio:
         else:
             return len(self.data)
         
-    
     def print(self):
         print(len(self.start_idxs))
         print(self.start_idxs)

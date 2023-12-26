@@ -14,8 +14,6 @@ class Audio:
         self.trimmed_data = self.original_data[start:end]
 
     def find_start_end(self, sample_rate, data):
-        # ステレオの場合はモノラルに変換
-        
         # 最大音量の10%を計算
         max_vol = np.max(np.abs(data))
         threshold = 0.1 * max_vol
@@ -49,8 +47,6 @@ class Audio:
     def trimmed_plot(self):
         Audio.plot_waveform(self.trimmed_data, "Trimmed")
         
-        
-
 if __name__ == "__main__":
     wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset\\swallowing1.wav')
     wav1.original_plot()
