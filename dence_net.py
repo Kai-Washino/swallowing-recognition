@@ -2,6 +2,8 @@ from tensorflow.keras.applications import DenseNet121
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 class DanceNet:
     def __init__(self, num_class):
@@ -15,7 +17,10 @@ class DanceNet:
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     def training(self, train_data, train_labels):
-        self.model.fit(train_data, train_labels, epochs=24, validation_split=0.1, batch_size= 9)
+        early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.001, patience=10, verbose=1, mode='min')
+        model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', verbose=1, save_best_only=True, mode='min')
+        history = self.model.fit(train_data, train_labels, epochs=100, validation_split=0.1, batch_size= 9, callbacks=[early_stopping, model_checkpoint])
+        # self.model.fit(train_data, train_labels, epochs=24, validation_split=0.1, batch_size= 9)
 
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
@@ -64,4 +69,4 @@ if __name__ == "__main__":
     model = DanceNet(3)
     model.training(train_data.data, train_data.labels)
     model.evaluate(test_data.data, test_data.labels)
-    model.save('20231225_159datasets.keras')
+    model.save('20231226_159datasets.keras')
