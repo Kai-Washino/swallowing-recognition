@@ -45,7 +45,7 @@ from dataset import DataSet
 import numpy as np
 
 if __name__ == "__main__":
-    directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset'
+    directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset'
    
     train_voice_folder = directory_path + '\\washino\\voice'
     train_cough_folder = directory_path + '\\washino\\cough'

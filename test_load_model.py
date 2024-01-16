@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     ##############  predictionのやり方　##############
 
-    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset\\shibata\\swallowing\\swallowing1.wav')
+    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\shibata\\swallowing\\swallowing1.wav')
     swallowing1 = Wavelet(wav1.sample_rate, wav1.trimmed_data, )
     coefficients, _ =  swallowing1.generate_coefficients()
     new_data = DataSet(1, 224, 224, 3, 0)

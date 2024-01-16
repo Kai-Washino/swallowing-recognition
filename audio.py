@@ -48,7 +48,7 @@ class Audio:
         Audio.plot_waveform(self.trimmed_data, "Trimmed")
         
 if __name__ == "__main__":
-    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset\\swallowing1.wav')
+    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\swallowing1.wav')
     wav1.original_plot()
     wav1.trimmed_plot()
     plt.show()
