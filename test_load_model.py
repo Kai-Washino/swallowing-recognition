@@ -6,7 +6,7 @@ from wavelet import Wavelet
 import cv2
 
 if __name__ == "__main__":
-    loaded_model = load_model('20231225_159datasets.keras')
+    loaded_model = load_model('20240116_159datasets.keras')
 
     ##############  evaluateのやり方　##############
     # directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dateset'
@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     ##############  predictionのやり方　##############
 
-    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\shibata\\swallowing\\swallowing1.wav')
+    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\shibata\\voice\\voice1.wav')
     swallowing1 = Wavelet(wav1.sample_rate, wav1.trimmed_data, )
     coefficients, _ =  swallowing1.generate_coefficients()
     new_data = DataSet(1, 224, 224, 3, 0)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     predicted_classes = np.argmax(predictions, axis=1)
     print("Predicted classes:", predicted_classes)
     print("Predicted probabilities:", predictions)
-    class_names = ['swallowing', 'cough', 'voice']  # 例
+    class_names = ['voice', 'swallowing', 'cough']  # 例
     predicted_class_names = [class_names[i] for i in predicted_classes]
     print("Predicted class names:", predicted_class_names)
 

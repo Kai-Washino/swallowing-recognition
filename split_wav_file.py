@@ -33,10 +33,11 @@ def split_wav_file(filename, destination_folder, file_label, start_idx, chunk_le
 
 if __name__ == "__main__":
     ########## 変更する場所 ###########
-    recorded_wav_file_name: str= 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\swallowing.wav' # わけるwavファイルの名前
-    save_folder_name: str = "C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\washino\\swallowing" # 保存するフォルダの名前
-    action_name: str = "swallowing" # 何をしたのか？嚥下ならswallowing 咳ならcough等    
-    start_idx: int = 61 # wavファイルの名前の数字を何から始めるか？
+    action_name: str = "voice" # 何をしたのか？嚥下ならswallowing 咳ならcough等    
+    recorded_wav_file_name: str= 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\' + action_name +'.wav' # わけるwavファイルの名前
+    save_folder_name: str = "C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\washino\\" + action_name # 保存するフォルダの名前
+    
+    start_idx: int = 99 # wavファイルの名前の数字を何から始めるか？
     interval: int = 3000 # 何 msに1回その行動をしたのか？
     ##################################
 

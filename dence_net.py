@@ -19,8 +19,8 @@ class DanceNet:
     def training(self, train_data, train_labels):
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.001, patience=10, verbose=1, mode='min')
         model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', verbose=1, save_best_only=True, mode='min')
-        history = self.model.fit(train_data, train_labels, epochs=100, validation_split=0.1, batch_size= 9, callbacks=[early_stopping, model_checkpoint])
-        # self.model.fit(train_data, train_labels, epochs=24, validation_split=0.1, batch_size= 9)
+        # history = self.model.fit(train_data, train_labels, epochs=100, validation_split=0.1, batch_size= 27, callbacks=[early_stopping, model_checkpoint])
+        self.model.fit(train_data, train_labels, epochs=24, validation_split=0.1, batch_size= 30)
 
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     test_cough_folder = directory_path + '\\shibata\\cough'
     test_swallowing_folder = directory_path + '\\shibata\\swallowing'    
     
-    train_data = DataSet(159, 224, 224, 3, 3)
+    train_data = DataSet(300, 224, 224, 3, 3)
     test_data = DataSet(9, 224, 224, 3, 3)
 
     train_data.folder_to_dataset(train_swallowing_folder, np.array([0, 0, 1]), 0)
@@ -69,4 +69,4 @@ if __name__ == "__main__":
     model = DanceNet(3)
     model.training(train_data.data, train_data.labels)
     model.evaluate(test_data.data, test_data.labels)
-    model.save('20231226_159datasets.keras')
+    model.save('20240116_159datasets.keras')
