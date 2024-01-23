@@ -77,12 +77,12 @@ class Long_audio:
         predicted_classes = np.argmax(predictions, axis=1)
         print("Predicted classes:", predicted_classes)
         print("Predicted probabilities:", predictions)
-        class_names = ['swallowing', 'cough', 'voice'] 
+        class_names = ['voice', 'cough', 'swallowing'] 
         predicted_class_names = [class_names[i] for i in predicted_classes]
         print("Predicted class names:", predicted_class_names)
         
 if __name__ == "__main__":
-    wav1 = Long_audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\test\\20231225\\20data_100sec.wav')
+    wav1 = Long_audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\cutout\\20240123\\20data_100sec.wav')
     wav1.print()
     wav1.plot("Test")
-    wav1.predict('20231225_159datasets.keras')
+    wav1.predict('20240116_159datasets.keras')
