@@ -1,8 +1,8 @@
 from tensorflow.keras.models import load_model
 from dataset import DataSet
 import numpy as np
-from audio import Audio
-from wavelet import Wavelet
+from .audio import Audio
+from .wavelet import Wavelet
 import cv2
 
 if __name__ == "__main__":

@@ -41,7 +41,7 @@ class DanceNet:
     def save(self, file_name):
         self.model.save(file_name)
 
-from dataset import DataSet
+from .dataset import DataSet
 import numpy as np
 
 if __name__ == "__main__":

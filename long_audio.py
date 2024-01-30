@@ -3,8 +3,8 @@ import scipy.io.wavfile as wav
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 import numpy as np
-from wavelet import Wavelet
-from dataset import DataSet
+from .wavelet import Wavelet
+from .dataset import DataSet
 
 class Long_audio:
     

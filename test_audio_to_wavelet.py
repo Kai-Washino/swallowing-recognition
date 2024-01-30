@@ -1,5 +1,5 @@
-from audio import Audio
-from wavelet import Wavelet
+from .audio import Audio
+from .wavelet import Wavelet
 
 if __name__ == "__main__":
     wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\voice1.wav')
