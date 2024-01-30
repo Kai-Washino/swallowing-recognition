@@ -41,19 +41,19 @@ class DanceNet:
     def save(self, file_name):
         self.model.save(file_name)
 
-from .dataset import DataSet
-import numpy as np
-
 if __name__ == "__main__":
-    directory_path = 'C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset'
+    from .dataset import DataSet
+    import numpy as np
+    import pathlib
+    directory_path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset')
    
-    train_voice_folder = directory_path + '\\washino\\voice'
-    train_cough_folder = directory_path + '\\washino\\cough'
-    train_swallowing_folder = directory_path + '\\washino\\swallowing'    
+    train_voice_folder = directory_path / 'washino' / 'voice'
+    train_cough_folder = directory_path / 'washino' / 'cough'
+    train_swallowing_folder = directory_path / 'washino' / 'swallowing'    
 
-    test_voice_folder = directory_path + '\\shibata\\voice'
-    test_cough_folder = directory_path + '\\shibata\\cough'
-    test_swallowing_folder = directory_path + '\\shibata\\swallowing'    
+    test_voice_folder = directory_path / 'shibata' / 'voice'
+    test_cough_folder = directory_path / 'shibata' / 'cough'
+    test_swallowing_folder = directory_path / 'shibata' / 'swallowing'  
     
     train_data = DataSet(300, 224, 224, 3, 3)
     test_data = DataSet(9, 224, 224, 3, 3)
