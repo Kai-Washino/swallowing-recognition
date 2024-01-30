@@ -46,9 +46,11 @@ class Audio:
 
     def trimmed_plot(self):
         Audio.plot_waveform(self.trimmed_data, "Trimmed")
-        
+
 if __name__ == "__main__":
-    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\swallowing1.wav')
+    import pathlib      
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/voice/voice1.wav')
+    wav1 = Audio(path)
     wav1.original_plot()
     wav1.trimmed_plot()
     plt.show()

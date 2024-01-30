@@ -5,6 +5,7 @@ from matplotlib.colors import Normalize
 from .audio import Audio
 from .wavelet import Wavelet
 import os
+import pathlib
 
 class DataSet:
     def __init__(self, num_samples, img_height, img_width, channels, num_class, ):
@@ -52,12 +53,11 @@ class DataSet:
     def print_data(self):
         print(self.data)
 
-
-
-from .audio import Audio
-from .wavelet import Wavelet
 if __name__ == "__main__":
-    wav1 = Audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\voice\\voice1.wav')
+    from .audio import Audio
+    from .wavelet import Wavelet
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/voice/voice1.wav')
+    wav1 = Audio(path)
     swallowing1 = Wavelet(wav1.sample_rate, wav1.trimmed_data, )
     coefficients, _ =  swallowing1.generate_coefficients()
     data = DataSet(1, 224, 224, 3, 3)

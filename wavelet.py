@@ -66,7 +66,9 @@ class Wavelet:
         plt.show()
 
 if __name__ == "__main__":
-    sample_rate, data = wav.read('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset\\swallowing1.wav')
+    import pathlib
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/swallowing/swallowing1.wav')
+    sample_rate, data = wav.read(path)
     swallowing1 = Wavelet(sample_rate, data)
     swallowing1.generate_coefficients()
     swallowing1.plot_spectrogram()

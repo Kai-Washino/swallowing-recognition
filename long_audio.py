@@ -82,7 +82,11 @@ class Long_audio:
         print("Predicted class names:", predicted_class_names)
         
 if __name__ == "__main__":
-    wav1 = Long_audio('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\cutout\\20240123\\20data_100sec.wav')
+    import pathlib
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/cutout/20240123/20data_100sec.wav')
+    wav1 = Long_audio(path)
     wav1.print()
     wav1.plot("Test")
-    wav1.predict('20240116_159datasets.keras')
+    current_path = pathlib.Path(__file__).parent
+    model_path = current_path / '20240116_159datasets.keras'
+    wav1.predict(model_path)
