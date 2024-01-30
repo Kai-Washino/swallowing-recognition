@@ -17,12 +17,12 @@ class DanceNet:
         # モデルのコンパイル
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    def training(self, train_data, train_labels):
+    def training(self, train_data, train_labels, epochs, batch_size):
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.001, patience=10, verbose=1, mode='min')
         model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_loss', verbose=1, save_best_only=True, mode='min')
         # history = self.model.fit(train_data, train_labels, epochs=100, validation_split=0.1, batch_size= 27, callbacks=[early_stopping, model_checkpoint])
-        self.model.fit(train_data, train_labels, epochs=24, validation_split=0.1, batch_size= 30)
-
+        self.model.fit(train_data, train_labels, epochs=epochs, validation_split=0.1, batch_size= batch_size)
+        
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
         print("Test accuracy: ", self.test_accuracy)
