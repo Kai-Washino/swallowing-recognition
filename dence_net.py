@@ -46,22 +46,30 @@ class DanceNet:
     def evaluate(self, test_data, test_labels):
         self.test_loss, self.test_accuracy = self.model.evaluate(test_data, test_labels)
         print("Test accuracy: ", self.test_accuracy)
-
-        predictions = self.model.predict(test_data)
-        if self.num_class == 2:
-            predicted_classes = predictions
-            true_classes = test_labels
+        self.predictions = self.model.predict(test_data)
+        if self.num_class == 2:            
+            predicted_classes = (self.predictions > 0.5).astype(int)
+            self.predicted_classes = np.squeeze(predicted_classes)            
+            self.true_classes = test_labels            
         else:
-            predicted_classes = np.argmax(predictions, axis=1)
-            true_classes = np.argmax(test_labels, axis=1)
-        correctly_classified = predicted_classes == true_classes
-        correct_indices = np.where(correctly_classified)[0]
-        incorrect_indices = np.where(~correctly_classified)[0]
+            self.predicted_classes = np.argmax(self.predictions, axis=1)
+            self.true_classes = np.argmax(test_labels, axis=1)
+        self.correctly_classified = predicted_classes == self.true_classes        
+        self.correct_indices = np.where(self.correctly_classified)[0]
+        self.incorrect_indices = np.where(~self.correctly_classified)[0]
 
-        print("正しく分類されたサンプルのインデックス:", correct_indices)
-        print("誤って分類されたサンプルのインデックス:", incorrect_indices)
-        for i in incorrect_indices:
-            print(f"サンプル {i}: 正解 = {true_classes[i]}, 予測 = {predicted_classes[i]}")
+        print("正しく分類されたサンプルのインデックス:", self.correct_indices)
+        print("誤って分類されたサンプルのインデックス:", self.incorrect_indices)
+        for i in self.incorrect_indices:
+            print(f"サンプル {i}: 正解 = {self.true_classes[i]}, 予測 = {predicted_classes[i]}")
+
+    def evaluate_print(self):
+        print(self.predictions)
+        print(self.predicted_classes)
+        print(self.true_classes)
+        print(self.correctly_classified)
+        print(self.correct_indices)
+        print(self.incorrect_indices)
 
     def save(self, file_name):
         self.model.save(file_name)
@@ -84,8 +92,9 @@ if __name__ == "__main__":
     test_data = DataSet(28, 224, 224, 3, 2)
 
     train_data.folder_to_dataset(train_swallowing_folder, np.array(0), 0)
-    train_data.folder_to_dataset(train_cough_folder, np.array(1), 100)
+    train_data.folder_to_dataset(train_cough_folder, np.array(1), 100)    
     # train_data.folder_to_dataset(train_voice_folder, np.array([1, 0, 0]), 2)
+    # train_data.print_label()
 
     test_data.folder_to_dataset(test_swallowing_folder, np.array(0), 0)
     test_data.folder_to_dataset(test_cough_folder, np.array(1), 14)
@@ -94,4 +103,4 @@ if __name__ == "__main__":
     model = DanceNet(2)
     model.training(train_data.data, train_data.labels, 1, 32)
     model.evaluate(test_data.data, test_data.labels)
-    model.save('20240116_159datasets.keras')
+    # model.save('20240116_159datasets.keras')
