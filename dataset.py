@@ -15,7 +15,10 @@ class DataSet:
         self.channels = channels
         self.num_class = num_class
         self.data = np.zeros((num_samples, img_height, img_width, channels))
-        self.labels = np.zeros((num_samples, num_class))
+        if num_class == 2:
+            self.labels = np.zeros(num_samples)
+        else:
+            self.labels = np.zeros((num_samples, num_class))
 
     def add_to_dataset(self, i, coefficients, label):
         spectrogram = np.abs(coefficients)
