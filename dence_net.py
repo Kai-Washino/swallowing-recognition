@@ -54,14 +54,14 @@ class DanceNet:
         else:
             self.predicted_classes = np.argmax(self.predictions, axis=1)
             self.true_classes = np.argmax(test_labels, axis=1)
-        self.correctly_classified = predicted_classes == self.true_classes        
+        self.correctly_classified = self.predicted_classes == self.true_classes        
         self.correct_indices = np.where(self.correctly_classified)[0]
         self.incorrect_indices = np.where(~self.correctly_classified)[0]
 
         print("正しく分類されたサンプルのインデックス:", self.correct_indices)
         print("誤って分類されたサンプルのインデックス:", self.incorrect_indices)
         for i in self.incorrect_indices:
-            print(f"サンプル {i}: 正解 = {self.true_classes[i]}, 予測 = {predicted_classes[i]}")
+            print(f"サンプル {i}: 正解 = {self.true_classes[i]}, 予測 = {self.predicted_classes[i]}")
 
     def evaluate_print(self):
         print(self.predictions)
