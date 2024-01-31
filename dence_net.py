@@ -84,11 +84,11 @@ if __name__ == "__main__":
     test_data = DataSet(28, 224, 224, 3, 2)
 
     train_data.folder_to_dataset(train_swallowing_folder, np.array(0), 0)
-    train_data.folder_to_dataset(train_cough_folder, np.array(1), 1)
+    train_data.folder_to_dataset(train_cough_folder, np.array(1), 100)
     # train_data.folder_to_dataset(train_voice_folder, np.array([1, 0, 0]), 2)
 
     test_data.folder_to_dataset(test_swallowing_folder, np.array(0), 0)
-    test_data.folder_to_dataset(test_cough_folder, np.array(1), 1)
+    test_data.folder_to_dataset(test_cough_folder, np.array(1), 14)
     # test_data.folder_to_dataset(test_voice_folder, np.array([1, 0, 0]), 2)
 
     model = DanceNet(2)

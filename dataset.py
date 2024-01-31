@@ -48,7 +48,7 @@ class DataSet:
             wav = Audio(folder_name / file_name)
             wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
             coefficients, _ =  wavdata.generate_coefficients()
-            self.add_to_dataset(start_num + i * self.num_class, coefficients, label)
+            self.add_to_dataset(start_num, coefficients, label)
 
     def print_label(self): 
         print(self.labels)
