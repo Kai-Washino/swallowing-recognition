@@ -48,6 +48,7 @@ class Long_audio:
             return len(self.data)
         
     def print(self):
+        print("threashold: " + self.threshold)
         print(len(self.start_idxs))
         print(self.start_idxs)
         print(self.end_idxs)
@@ -64,9 +65,9 @@ class Long_audio:
             plt.axvline(x=pt, color='r', linestyle='--')
         plt.show()
 
-    def predict(self, model_file_name):
+    def predict(self, model_file_name, class_num, class_names = None):
         loaded_model = load_model(model_file_name)
-        new_data = DataSet(len(self.trimmed_datas), 224, 224, 3, 3)
+        new_data = DataSet(len(self.trimmed_datas), 224, 224, 3, class_num)
         for i, trimmed_data in enumerate(self.trimmed_datas):
             wav = Wavelet(self.sample_rate, trimmed_data)
             coefficients, _ = wav.generate_coefficients()
@@ -74,12 +75,17 @@ class Long_audio:
 
         print(new_data.data.shape)
         predictions = loaded_model.predict(new_data.data)
-        predicted_classes = np.argmax(predictions, axis=1)
-        print("Predicted classes:", predicted_classes)
-        print("Predicted probabilities:", predictions)
-        class_names = ['voice', 'cough', 'swallowing'] 
-        predicted_class_names = [class_names[i] for i in predicted_classes]
-        print("Predicted class names:", predicted_class_names)
+
+        if class_num == 2:
+            predicted_classes = (predictions > 0.5).astype(int)
+            predicted_classes = np.squeeze(predicted_classes)
+            print("Predicted classes:", predicted_classes)
+        else:
+            predicted_classes = np.argmax(predictions, axis=1)
+            print("Predicted classes:", predicted_classes)
+            print("Predicted probabilities:", predictions)            
+            predicted_class_names = [class_names[i] for i in predicted_classes]
+            print("Predicted class names:", predicted_class_names)
         
 if __name__ == "__main__":
     import pathlib
