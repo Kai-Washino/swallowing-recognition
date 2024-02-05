@@ -48,7 +48,7 @@ class Long_audio:
             return len(self.data)
         
     def print(self):
-        print("threashold: " + self.threshold)
+        print(self.threshold)
         print(len(self.start_idxs))
         print(self.start_idxs)
         print(self.end_idxs)
