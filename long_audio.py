@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io.wavfile as wav
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 from tensorflow.keras.models import load_model
 import numpy as np
 from .wavelet import Wavelet
@@ -64,6 +65,42 @@ class Long_audio:
         for pt in self.end_idxs:
             plt.axvline(x=pt, color='r', linestyle='--')
         plt.show()
+        
+    def plot_fig(self, title, fig=None):
+        if fig is None:
+            fig = plt.figure(figsize=(10, 4))
+        plt.plot(self.data)
+        plt.title(title)
+        plt.xlabel('Samples')
+        plt.ylabel('Amplitude')
+        for pt in self.start_idxs:
+            plt.axvline(x=pt, color='r', linestyle='--')
+        for pt in self.end_idxs:
+            plt.axvline(x=pt, color='r', linestyle='--')
+        return fig
+    
+    def save_plots_to_pdf(self, pdf_filename):
+        with PdfPages(pdf_filename) as pdf:
+            # 最初のプロットを生成しPDFに保存
+            fig1 = self.plot_fig("Plot Title 1", plt.figure(figsize=(10, 4)))
+            pdf.savefig(fig1)
+            plt.close(fig1)
+
+            # 別のプロットを生成しPDFに保存
+            fig2 = plt.figure(figsize=(10, 4))
+            # ここに別のプロット関数のコードを追加
+            # 例:
+            # plt.plot(他のデータ)
+            pdf.savefig(fig2)
+            plt.close(fig2)
+
+            # PDFにメタデータを追加（オプション）
+            d = pdf.infodict()
+            d['Title'] = 'Multiple Plots'
+            d['Author'] = 'Your Name'
+            d['Subject'] = 'Generated Plots'
+            d['Keywords'] = 'Matplotlib PDF'
+#             d['CreationDate'] = datetime.datetime.today()
 
     def predict(self, model_file_name, class_num, class_names = None):
         loaded_model = load_model(model_file_name)
