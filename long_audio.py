@@ -96,21 +96,20 @@ class Long_audio:
         for pt in self.swallowing_end_idxs:
             plt.axvline(x=pt, color='r', linestyle='--')
         plt.show()
-        
-    def save_png_swallowing_number_line(self, png_name, sample_rate = 44100):
-        sample_rate = 44100
-        total_samples = len(self.data) * 18        
+
+    def save_png_swallowing_number_line(self, png_name, sample_rate = 44100):        
+        total_samples = len(self.data)      
         total_times = total_samples / sample_rate
         indices = self.swallowing_start_idxs
         times = indices / sample_rate
 
         plt.figure(figsize=(200, 2))
         x = np.linspace(0, total_times, total_samples)
-        y = np.tile(self.data, 18)
+        y = self.data
         print(len(y))
         plt.plot(x, y, alpha=0.5)
 
-        plt.xticks(np.arange(0, 2001, 5))  # 0から2000秒まで、50秒ごとに目盛りを設定
+        plt.xticks(np.arange(0, total_times, 5))  # 0から2000秒まで、50秒ごとに目盛りを設定
         plt.plot(times, np.zeros_like(times), 'ko')  # 黒点をプロット
         plt.xlim(0, total_times) 
         plt.xlabel('Time (seconds)')
