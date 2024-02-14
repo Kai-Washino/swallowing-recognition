@@ -2,6 +2,7 @@ import numpy as np
 import scipy.io.wavfile as wav
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
+from IPython.display import display, HTML
 from tensorflow.keras.models import load_model
 import numpy as np
 from .wavelet import Wavelet
@@ -95,6 +96,36 @@ class Long_audio:
         for pt in self.swallowing_end_idxs:
             plt.axvline(x=pt, color='r', linestyle='--')
         plt.show()
+        
+    def save_png_swallowing_number_line(self, png_name, sample_rate = 44100):
+        sample_rate = 44100
+        total_samples = len(self.data) * 18        
+        total_times = total_samples / sample_rate
+        indices = self.swallowing_start_idxs
+        times = indices / sample_rate
+
+        plt.figure(figsize=(200, 2))
+        x = np.linspace(0, total_times, total_samples)
+        y = np.tile(self.data, 18)
+        print(len(y))
+        plt.plot(x, y, alpha=0.5)
+
+        plt.xticks(np.arange(0, 2001, 5))  # 0から2000秒まで、50秒ごとに目盛りを設定
+        plt.plot(times, np.zeros_like(times), 'ko')  # 黒点をプロット
+        plt.xlim(0, total_times) 
+        plt.xlabel('Time (seconds)')
+        plt.yticks([])
+        plt.title('Indices on Timeline')
+
+        plt.savefig(png_name, bbox_inches='tight')
+        plt.close()
+    
+    def display_HTML(self, png_name):
+        display(HTML(data=f"""
+        <div style="width: 100%; overflow-x: scroll;">
+            <img src="{png_name}" style="display: block; margin: 0 auto;">
+        </div>
+        """))
     
     def save_plots_to_pdf(self, pdf_filename):
         with PdfPages(pdf_filename) as pdf:
