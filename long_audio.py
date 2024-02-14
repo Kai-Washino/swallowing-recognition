@@ -12,6 +12,7 @@ class Long_audio:
     def __init__(self, path):
         self.path = path
         self.sample_rate, self.data = wav.read(path)
+        self.predicted_classes = None
         if len(self.data.shape) > 1:
             self.data = self.data.mean(axis=1)   
 
@@ -53,6 +54,9 @@ class Long_audio:
         print(len(self.start_idxs))
         print(self.start_idxs)
         print(self.end_idxs)
+        
+        if self.predicted_classes is not None:
+            print(self.predicted_classes)
     
     def plot(self, title):
         plt.figure(figsize=(10, 4))
@@ -115,14 +119,14 @@ class Long_audio:
 
         if class_num == 2:
             predicted_classes = (predictions > 0.5).astype(int)
-            predicted_classes = np.squeeze(predicted_classes)
-            print("Predicted classes:", predicted_classes)
+            self.predicted_classes = np.squeeze(predicted_classes)
+            print("Predicted classes:", self.predicted_classes)
         else:
             predicted_classes = np.argmax(predictions, axis=1)
             print("Predicted classes:", predicted_classes)
             print("Predicted probabilities:", predictions)            
-            predicted_class_names = [class_names[i] for i in predicted_classes]
-            print("Predicted class names:", predicted_class_names)
+            self.predicted_class_names = [class_names[i] for i in predicted_classes]
+            print("Predicted class names:", self.predicted_class_names)
         
 if __name__ == "__main__":
     import pathlib
