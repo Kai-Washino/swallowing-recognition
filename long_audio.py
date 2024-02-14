@@ -83,6 +83,19 @@ class Long_audio:
             plt.axvline(x=pt, color='r', linestyle='--')
         return fig
     
+    def plot_predicted(self, title):
+        plt.figure(figsize=(10, 4))
+        plt.plot(self.data)
+        plt.title(title)
+        plt.xlabel('Samples')
+        plt.ylabel('Amplitude')               
+        
+        for pt in self.swallowing_start_idxs:
+            plt.axvline(x=pt, color='r', linestyle='--')
+        for pt in self.swallowing_end_idxs:
+            plt.axvline(x=pt, color='r', linestyle='--')
+        plt.show()
+    
     def save_plots_to_pdf(self, pdf_filename):
         with PdfPages(pdf_filename) as pdf:
             # 最初のプロットを生成しPDFに保存
@@ -127,6 +140,11 @@ class Long_audio:
             print("Predicted probabilities:", predictions)            
             self.predicted_class_names = [class_names[i] for i in predicted_classes]
             print("Predicted class names:", self.predicted_class_names)
+       
+        start_idxs = np.array(self.start_idxs)
+        end_idxs = np.array(self.end_idxs)
+        self.swallowing_start_idxs = start_idxs[self.predicted_classes == 0]
+        self.swallowing_end_idxs = end_idxs[self.predicted_classes == 0]
         
 if __name__ == "__main__":
     import pathlib
