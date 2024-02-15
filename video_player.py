@@ -18,6 +18,8 @@ class VideoPlayer:
         self.play_speed = 1
         self.is_playing = False
         self.is_reversed = False
+        self.current_frame = 0
+        self.current_time = 0
 
         # ボタンの作成
         ttk.Button(self.frame, text="再生", command=self.play_video).pack(side=tk.LEFT)
@@ -26,6 +28,9 @@ class VideoPlayer:
         ttk.Button(self.frame, text="スロー再生", command=lambda: self.set_speed(0.2)).pack(side=tk.LEFT)
         ttk.Button(self.frame, text="逆再生", command=self.reverse_play).pack(side=tk.LEFT)
         ttk.Button(self.frame, text="巻き戻し", command=self.rewind).pack(side=tk.LEFT)
+        # フレームと秒数を表示するLabelを追加
+        self.status_label = ttk.Label(self.frame, text="Frame: 0 Time: 0.0s")
+        self.status_label.pack(side=tk.LEFT)
 
     def update_frame(self):
         ret, frame = self.cap.read()
@@ -35,6 +40,10 @@ class VideoPlayer:
             imgtk = ImageTk.PhotoImage(image=img)
             self.label.imgtk = imgtk
             self.label.configure(image=imgtk)
+            self.current_frame = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+            self.current_time = self.current_frame / self.cap.get(cv2.CAP_PROP_FPS)
+            self.status_label.config(text=f"Frame: {self.current_frame} Time: {self.current_time:.2f}s")
+            
             if self.is_playing:
                 self.master.after(int(1000 / 30 / self.play_speed), self.update_frame)
 
