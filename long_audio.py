@@ -125,6 +125,43 @@ class Long_audio:
             <img src="{png_name}" style="display: block; margin: 0 auto;">
         </div>
         """))
+        
+    def plot_swallowing_count(self, window_size, interval, lag_time = 0, sample_rate = 44100, 
+                              red = None, blue = None, green = None, yellow = None):
+        indices = self.swallowing_start_idxs / sample_rate + lag_time
+        
+        start_time = np.min(indices) - window_size
+        end_time = np.max(indices) + window_size
+        times = np.arange(start_time, end_time + interval, interval)
+        
+        data_counts = []
+        for t in times:
+            count = np.sum((indices >= (t - window_size)) & (indices <= (t + window_size)))
+            data_counts.append(count)
+
+        # プロットの作成
+        plt.figure(figsize=(15, 5))
+        plt.plot(times, data_counts)
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Data Count in Window')
+        plt.title('Data Count in Each 60-Second Window')
+        plt.grid(True)
+        if red is not None:
+            for pt in red:
+                plt.axvline(x=pt, color='r', linestyle='--')
+        if blue is not None:
+            for pt in blue:
+                plt.axvline(x=pt, color='b', linestyle='--')
+        if green is not None:
+            for pt in green:
+                plt.axvline(x=pt, color='g', linestyle='--')
+        if yellow is not None:
+            for pt in yellow:
+                plt.axvline(x=pt, color='y', linestyle='--')
+        plt.show()
+        
+
+        
     
     def save_plots_to_pdf(self, pdf_filename):
         with PdfPages(pdf_filename) as pdf:
