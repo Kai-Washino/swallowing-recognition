@@ -127,7 +127,8 @@ class Long_audio:
         """))
         
     def plot_swallowing_count(self, window_size, interval, lag_time = 0, sample_rate = 44100, 
-                              red = None, blue = None, green = None, yellow = None):
+                              red = None, blue = None, green = None, yellow = None,
+                              title = None, y = None):
         indices = self.swallowing_start_idxs / sample_rate + lag_time
         
         start_time = np.min(indices) - window_size
@@ -143,8 +144,13 @@ class Long_audio:
         plt.figure(figsize=(15, 5))
         plt.plot(times, data_counts)
         plt.xlabel('Time (seconds)')
-        plt.ylabel('Data Count in Window')
-        plt.title('Data Count in Each 60-Second Window')
+        plt.ylabel('Data Count in Window')        
+        if title is not None:
+            plt.title(title)
+        else:
+            plt.title('Data Count in Each 60-Second Window')
+        if y is not None:
+            plt.ylim(-0.5, y)
         plt.grid(True)
         if red is not None:
             for pt in red:
@@ -159,7 +165,6 @@ class Long_audio:
             for pt in yellow:
                 plt.axvline(x=pt, color='y', linestyle='--')
         plt.show()
-        
 
         
     
