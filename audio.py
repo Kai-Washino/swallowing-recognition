@@ -36,8 +36,9 @@ class Audio:
     @staticmethod
     def plot_waveform(data, title):
         plt.figure(figsize=(10, 4))
-        plt.plot(data)
+        plt.plot(data, color = 'black')
         plt.title(title)
+        plt.ylim(-30000, 30000)
         plt.xlabel('Samples')
         plt.ylabel('Amplitude')
 
@@ -49,7 +50,7 @@ class Audio:
 
 if __name__ == "__main__":
     import pathlib      
-    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/voice/voice1.wav')
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/swallowing/swallowing1.wav')
     wav1 = Audio(path)
     wav1.original_plot()
     wav1.trimmed_plot()
