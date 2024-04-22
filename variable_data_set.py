@@ -22,22 +22,21 @@ class VariableDataSet(DataSet):
         self.data.append(normalized_spectrogram)
         self.labels.append(label)
 
-    def folder_to_dataset(self, folder_name, label, padding = True, dimension = None):        
+    def folder_to_dataset(self, folder_name, label, dimension = None):        
         file_names = self.get_wav_files(folder_name)
         for file_name in file_names:
             wav = Audio(folder_name / file_name)
             wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
             coefficients, _ =  wavdata.generate_coefficients()
-            self.add_to_dataset(coefficients, label)
-        
-        if padding:
-            self.max_cols = max(sample.shape[1] for sample in self.data)            
-            self.data = [np.pad(sample, ((0, 0), (0, self.max_cols - sample.shape[1])), mode='constant', constant_values=0) for sample in self.data]
-        
+            self.add_to_dataset(coefficients, label)        
         if dimension is not None:
             pca = PCA(n_components= dimension)  # 100次元に削減
             self.data = [pca.fit_transform(sample) for sample in self.data]
             print(np.array(self.data).shape)
+    
+    def padding(self):
+        self.max_cols = max(sample.shape[1] for sample in self.data)            
+        self.data = [np.pad(sample, ((0, 0), (0, self.max_cols - sample.shape[1])), mode='constant', constant_values=0) for sample in self.data]
     
     def list_to_np(self):
         self.data = np.array(self.data)
