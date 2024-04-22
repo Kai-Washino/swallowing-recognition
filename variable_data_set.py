@@ -9,10 +9,14 @@ from .wavelet import Wavelet
 
 
 class VariableDataSet(DataSet):
-    def __init__(self, num_samples, scale = 127, time_range = 70000):
+    def __init__(self, num_samples, scale = 127, time_range = 70000, dimension = None):
         self.time_range = time_range
+        self.dimension = dimension
         
-        self.data = np.zeros((num_samples, scale, self.time_range))
+        if dimension is None:
+            self.data = np.zeros((num_samples, scale, self.time_range))
+        else:
+            self.data = np.zeros((num_samples, scale, self.dimension))
         self.labels = np.zeros(num_samples)
         self.max_cols = 0
 
@@ -21,14 +25,24 @@ class VariableDataSet(DataSet):
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        
-        self.data[i] = (self.trim_or_pad(normalized_spectrogram))
+        
+        if self.dimension is None:
+            data = self.trim_or_pad(normalized_spectrogram)        
+        else:
+            data = self.pca(normalized_spectrogram)
+            
+        self.data[i] = (data)
         self.labels[i] = (label)
 
    
-    def dimension(self):
-        pca = PCA(n_components= dimension)  # 100次元に削減
-        self.data = [pca.fit_transform(sample) for sample in self.data]
-        print(np.array(self.data).shape)
+    def pca(self, data):
+        if self.dimension is None:
+            return data
+        else:
+            pca = PCA(n_components= self.dimension)  # 100次元に削減
+            transformed_data = pca.fit_transform(data)
+            return transformed_data
+        
             
     def trim_or_pad(self, data):
         current_length = data.shape[1]        
