@@ -7,7 +7,8 @@ from sklearn.preprocessing import StandardScaler
 from .dence_net import DanceNet
 
 class CNN(DanceNet): 
-    def __init__(self, dimension):        
+    def __init__(self, dimension, num_class = 2):
+        self.num_class = num_class        
         self.model = tf.keras.models.Sequential([
             Masking(mask_value=0.0, input_shape=(127, dimension)),            
             Conv1D(32, 3, activation='relu'),  # 第1畳み込み層
