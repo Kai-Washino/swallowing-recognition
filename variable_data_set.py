@@ -33,10 +33,13 @@ class VariableDataSet(DataSet):
             pca = PCA(n_components= dimension)  # 100次元に削減
             self.data = [pca.fit_transform(sample) for sample in self.data]
             print(np.array(self.data).shape)
+            
+    def trimming(self, range_num):
+        self.data = [sample[:, :70000] if sample.shape[1] >= 70000 else sample for sample in  self.data]
     
     def padding(self):
         self.max_cols = max(sample.shape[1] for sample in self.data)            
-        self.data = [np.pad(sample, ((0, 0), (0, self.max_cols - sample.shape[1])), mode='constant', constant_values=0) for sample in self.data]
+        self.data = [np.pad(sample, ((0, 0), (0, self.max_cols - sample.shape[1])), mode='constant', constant_values=0) for sample in self.data]          
     
     def list_to_np(self):
         self.data = np.array(self.data)
