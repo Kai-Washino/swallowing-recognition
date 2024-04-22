@@ -9,41 +9,41 @@ from .wavelet import Wavelet
 
 
 class VariableDataSet(DataSet):
-    def __init__(self):
-        self.data = []
-        self.labels = []
+    def __init__(self, num_samples, scale = 127, time_range = 70000):
+        self.time_range = time_range
+        
+        self.data = np.zeros((num_samples, scale, self.time_range))
+        self.labels = np.zeros(num_samples)
         self.max_cols = 0
 
-    def add_to_dataset(self, coefficients, label):        
+    def add_to_dataset(self, i, coefficients, label):        
         spectrogram = np.abs(coefficients)        
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        
-        self.data.append(normalized_spectrogram)
-        self.labels.append(label)
+        self.data[i] = (self.trim_or_pad(normalized_spectrogram))
+        self.labels[i] = (label)
 
-    def folder_to_dataset(self, folder_name, label, dimension = None):        
-        file_names = self.get_wav_files(folder_name)
-        for file_name in file_names:
-            wav = Audio(folder_name / file_name)
-            wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
-            coefficients, _ =  wavdata.generate_coefficients()
-            self.add_to_dataset(coefficients, label)        
-        if dimension is not None:
-            pca = PCA(n_components= dimension)  # 100次元に削減
-            self.data = [pca.fit_transform(sample) for sample in self.data]
-            print(np.array(self.data).shape)
+   
+    def dimension(self):
+        pca = PCA(n_components= dimension)  # 100次元に削減
+        self.data = [pca.fit_transform(sample) for sample in self.data]
+        print(np.array(self.data).shape)
             
-    def trimming(self, range_num):
-        self.data = [sample[:, :70000] if sample.shape[1] >= 70000 else sample for sample in  self.data]
-    
-    def padding(self):
-        self.max_cols = max(sample.shape[1] for sample in self.data)            
-        self.data = [np.pad(sample, ((0, 0), (0, self.max_cols - sample.shape[1])), mode='constant', constant_values=0) for sample in self.data]          
-    
-    def list_to_np(self):
-        self.data = np.array(self.data)
-        self.labels = np.array(self.labels)
+    def trim_or_pad(self, data):
+        current_length = data.shape[1]        
+        if current_length > self.time_range:
+            # 70000以上の場合はトリミング            
+            trimmed_data = data[:, :self.time_range]       
+            return trimmed_data
+        elif current_length < self.time_range:
+            # 70000未満の場合はパディング
+            padding_length = self.time_range - current_length
+            padded_data = np.pad(data, ((0, 0), (0, padding_length)), mode='constant', constant_values=0)
+            return padded_data
+        else:
+            # すでに70000の場合はそのまま返す
+            return data  
 
 if __name__ == "__main__":    
     path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2024測定デバイス/swallowing/dataset/washino/voice/voice3.wav')
