@@ -7,19 +7,19 @@ from sklearn.preprocessing import StandardScaler
 from .dence_net import DanceNet
 
 class CNN(DanceNet): 
-    def __init__(self, scale = 127, time_range = 70000, num_class = 2):
+    def __init__(self, scale = 127, time_range = 70000, num_class = 2, start_filter = 8):
         self.num_class = num_class
         self.scale = scale
         self.time_range = time_range                
         self.model = tf.keras.models.Sequential([
             Masking(mask_value=0.0, input_shape=(scale, time_range)),            
-            Conv1D(32, 3, activation='relu'),  # 第1畳み込み層
+            Conv1D(start_filter, 3, activation='relu'),  # 第1畳み込み層
             MaxPooling1D(2),  # 第1プーリング層
-            Conv1D(64, 3, activation='relu'),  # 第2畳み込み層
+            Conv1D(start_filter * 2, 3, activation='relu'),  # 第2畳み込み層
             MaxPooling1D(2),  # 第2プーリング層
-            Conv1D(128, 3, activation='relu'),  # 第3畳み込み層
+            Conv1D(start_filter * 2 * 2, 3, activation='relu'),  # 第3畳み込み層
             MaxPooling1D(3),  # 第3プーリング層
-            Conv1D(256, 3, activation='relu'),  # 第4畳み込み層
+            Conv1D(start_filter * 2 * 2 * 2, 3, activation='relu'),  # 第4畳み込み層
             MaxPooling1D(1),  # 第4プーリング層
             Flatten(),  # データのフラット化
             Dense(128, activation='relu'),
