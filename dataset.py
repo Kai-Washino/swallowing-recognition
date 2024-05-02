@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from .audio import Audio
 from .wavelet import Wavelet
+from .fft import FFT
 import os
 import pathlib
 
@@ -42,13 +43,21 @@ class DataSet:
                 wav_files.append(filename)
         return wav_files
 
-    def folder_to_dataset(self, folder_name, label, start_num):        
+    def folder_to_dataset(self, folder_name, label, start_num, signal_processing = "wavelet"):        
         file_names = self.get_wav_files(folder_name)
         for i, file_name in enumerate(file_names):
             wav = Audio(folder_name / file_name)
-            wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
-            coefficients, _ =  wavdata.generate_coefficients()
-            self.add_to_dataset(start_num + i, coefficients, label)
+            if signal_processing == 'wavelet':
+                wavdata = Wavelet(wav.sample_rate, wav.trimmed_data, )
+                coefficients, _ =  wavdata.generate_coefficients()
+                self.add_to_dataset(start_num + i, coefficients, label)
+            elif signal_processing == 'fft':
+                wavdata = FFT(wav.sample_rate, wav.trimmed_data, )
+                spectrogram = wavdata.generate_spectrogram
+                self.add_to_dataset(start_num + i, spectrogram, label)
+            else:
+                print("name is not define")
+    
 
     def print_label(self): 
         print(self.labels)
