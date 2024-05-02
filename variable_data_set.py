@@ -24,8 +24,7 @@ class VariableDataSet(DataSet):
         if type(data) == tuple:
             spectrogram = np.abs(data)        
         else:
-            spectrogram = data
-            print(spectrogram.shape)
+            spectrogram = data         
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        
