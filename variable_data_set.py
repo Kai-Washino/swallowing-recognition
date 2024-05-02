@@ -47,16 +47,16 @@ class VariableDataSet(DataSet):
     def trim_or_pad(self, data):
         current_length = data.shape[1]        
         if current_length > self.time_range:
-            # 70000以上の場合はトリミング            
+            # time_range以上の場合はトリミング            
             trimmed_data = data[:, :self.time_range]       
             return trimmed_data
         elif current_length < self.time_range:
-            # 70000未満の場合はパディング
+            # time_range未満の場合はパディング
             padding_length = self.time_range - current_length
             padded_data = np.pad(data, ((0, 0), (0, padding_length)), mode='constant', constant_values=0)
             return padded_data
         else:
-            # すでに70000の場合はそのまま返す
+            # すでにtime_rangeの場合はそのまま返す
             return data  
 
 if __name__ == "__main__":    
