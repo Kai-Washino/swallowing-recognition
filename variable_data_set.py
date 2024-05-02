@@ -9,7 +9,7 @@ from .wavelet import Wavelet
 
 
 class VariableDataSet(DataSet):
-    def __init__(self, num_samples, scale = 127, time_range = 70000, dimension = None):
+    def __init__(self, num_samples, scale = 222, time_range = 500, dimension = None):
         self.time_range = time_range
         self.dimension = dimension
         
@@ -20,8 +20,12 @@ class VariableDataSet(DataSet):
         self.labels = np.zeros(num_samples)
         self.max_cols = 0
 
-    def add_to_dataset(self, i, coefficients, label):        
-        spectrogram = np.abs(coefficients)        
+    def add_to_dataset(self, i, data, label):        
+        if type(data) == tuple:
+            spectrogram = np.abs(data)        
+        else:
+            spectrogram = data
+            print(spectrogram.shape)
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        
@@ -47,16 +51,16 @@ class VariableDataSet(DataSet):
     def trim_or_pad(self, data):
         current_length = data.shape[1]        
         if current_length > self.time_range:
-            # 70000以上の場合はトリミング            
+            # time_range以上の場合はトリミング            
             trimmed_data = data[:, :self.time_range]       
             return trimmed_data
         elif current_length < self.time_range:
-            # 70000未満の場合はパディング
+            # time_range未満の場合はパディング
             padding_length = self.time_range - current_length
             padded_data = np.pad(data, ((0, 0), (0, padding_length)), mode='constant', constant_values=0)
             return padded_data
         else:
-            # すでに70000の場合はそのまま返す
+            # すでにtime_rangeの場合はそのまま返す
             return data  
 
 if __name__ == "__main__":    

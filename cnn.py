@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from .dence_net import DanceNet
 
 class CNN(DanceNet): 
-    def __init__(self, scale = 127, time_range = 70000, num_class = 2, start_filter = 8):
+    def __init__(self, scale = 127, time_range = 500, num_class = 2, start_filter = 8):
         self.num_class = num_class
         self.scale = scale
         self.time_range = time_range                
@@ -44,18 +44,18 @@ if __name__ == "__main__":
     test_swallowing_folder = directory_path / 'shibata' / 'swallowing'    
     
     # train_data = VariableDataSet()
-    test_data = VariableDataSet(num_samples=28, time_range=50000)
+    test_data = VariableDataSet(num_samples=28, scale=222)
 
     # train_data.folder_to_dataset(train_swallowing_folder, np.array(0))
     # train_data.folder_to_dataset(train_cough_folder, np.array(1))    
     # train_data.folder_to_dataset(train_voice_folder, np.array([1, 0, 0]), 2)
     # train_data.print_label()
-    test_data.folder_to_dataset(test_swallowing_folder, np.array(0), 0)
-    test_data.folder_to_dataset(test_cough_folder, np.array(1), 14)
+    test_data.folder_to_dataset(test_swallowing_folder, np.array(0), 0, signal_processing='fft')
+    test_data.folder_to_dataset(test_cough_folder, np.array(1), 14, signal_processing='fft')
 
     # test_data.folder_to_dataset(test_voice_folder, np.array([1, 0, 0]), 2)
 
-    model = CNN(time_range=50000)
+    model = CNN(scale = 222, time_range=500)
     # model.training(train_data.data, train_data.labels, 1, 32)
     model.training(test_data.data, test_data.labels, 2, 32)
     # model.evaluate(test_data.data, test_data.labels)

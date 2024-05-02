@@ -67,8 +67,10 @@ class Wavelet:
 
 if __name__ == "__main__":
     import pathlib
-    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2023測定デバイス/swallowing/dataset/washino/swallowing/swallowing1.wav')
+    path = pathlib.Path('C:/Users/S2/Documents/デバイス作成/2024測定デバイス/swallowing/dataset/washino/swallowing/swallowing1.wav')
     sample_rate, data = wav.read(path)
     swallowing1 = Wavelet(sample_rate, data)
-    swallowing1.generate_coefficients()
+    coefficients  = swallowing1.generate_coefficients()
+    print(type(coefficients))
+    print(type(coefficients) == tuple)
     swallowing1.plot_spectrogram()
