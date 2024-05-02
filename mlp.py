@@ -7,10 +7,10 @@ from sklearn.preprocessing import StandardScaler
 from .dence_net import DanceNet
 
 class MLP(DanceNet): 
-    def __init__(self, dimension, num_class = 2):
+    def __init__(self, dimension, scale = 127, num_class = 2):
         self.num_class = num_class        
         self.model = tf.keras.models.Sequential([
-            Masking(mask_value=0.0, input_shape=(127, dimension)),
+            Masking(mask_value=0.0, input_shape=(scale, dimension)),
             Flatten(),
             tf.keras.layers.Dense(64, activation='relu'),
             tf.keras.layers.Dense(64, activation='relu'),
