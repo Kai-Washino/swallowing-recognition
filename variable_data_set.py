@@ -25,17 +25,24 @@ class VariableDataSet(DataSet):
             spectrogram = np.abs(data)        
         else:
             spectrogram = data         
+            
+        if len(spectrogram) == 0:
+            print("Warning: No data available for FFT.") 
+            print(i)
+            print(spectrogram)
+            return 
+            
         min_val = spectrogram.min()
         max_val = spectrogram.max()
-        normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        
-        
-        if self.dimension is None:
-            data = self.trim_or_pad(normalized_spectrogram)        
-        else:
-            data = self.pca(normalized_spectrogram)
+        normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)
             
-        self.data[i] = (data)
-        self.labels[i] = (label)
+        if self.dimension is None:                       
+            data = self.trim_or_pad(normalized_spectrogram)            
+        else:
+            data = self.pca(normalized_spectrogram)                        
+            
+        self.data[i] = data
+        self.labels[i] = label
 
    
     def pca(self, data):
