@@ -53,7 +53,7 @@ class DataSet:
                 self.add_to_dataset(start_num + i, coefficients, label)
             elif signal_processing == 'fft':
                 wavdata = FFT(wav.sample_rate, wav.trimmed_data, )
-                spectrogram = wavdata.generate_spectrogram
+                spectrogram = wavdata.generate_spectrogram()
                 self.add_to_dataset(start_num + i, spectrogram, label)
             else:
                 print("name is not define")

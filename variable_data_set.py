@@ -9,7 +9,7 @@ from .wavelet import Wavelet
 
 
 class VariableDataSet(DataSet):
-    def __init__(self, num_samples, scale = 127, time_range = 70000, dimension = None):
+    def __init__(self, num_samples, scale = 222, time_range = 500, dimension = None):
         self.time_range = time_range
         self.dimension = dimension
         
@@ -20,8 +20,12 @@ class VariableDataSet(DataSet):
         self.labels = np.zeros(num_samples)
         self.max_cols = 0
 
-    def add_to_dataset(self, i, coefficients, label):        
-        spectrogram = np.abs(coefficients)        
+    def add_to_dataset(self, i, data, label):        
+        if type(data) == tuple:
+            spectrogram = np.abs(data)        
+        else:
+            spectrogram = data
+            print(spectrogram.shape)
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)        

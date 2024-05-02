@@ -64,6 +64,7 @@ if __name__ == "__main__":
     swallowing1 = FFT(sample_rate, data)
     spectrogram = swallowing1.generate_spectrogram()
     print(spectrogram.shape)
+    print(spectrogram.min())
     swallowing1.plot_spectrogram()
 
         
