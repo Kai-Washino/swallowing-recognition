@@ -10,7 +10,7 @@ from .dataset import DataSet
 
 class Long_audio:
     
-    def __init__(self, path):
+    def __init__(self, path, threshold = 0.005):
         self.path = path
         self.sample_rate, self.data = wav.read(path)
         self.predicted_classes = None
@@ -18,11 +18,11 @@ class Long_audio:
             self.data = self.data.mean(axis=1)   
 
         max_vol = np.max(np.abs(self.data))
-        self.threshold = 0.005 * max_vol
+        self.threshold = threshold * max_vol
         self.start_idxs = []
         self.end_idxs = []        
-        search_start_idx = 1
-        while(search_start_idx < len(self.data)):
+        search_start_idx = 0
+        while search_start_idx < len(self.data):
             search_start_idx = self.find_start_end(search_start_idx)
 
         self.trimmed_datas = []
@@ -33,17 +33,16 @@ class Long_audio:
         indices = np.where(np.abs(self.data[search_start_idx:]) >= self.threshold)[0]
         if len(indices) > 0:
             start_idx = indices[0] + search_start_idx
-            # start_idxs = np.where(np.abs(self.data) >= self.threshold)[0][0]
-            # start_idxs = np.where(np.abs(self.data[search_start_idxs:]) >= self.threshold)[0][0] + search_start_idxs
             self.start_idxs.append(start_idx)
+            
             # 186ミリ秒のサンプル数を計算
             silence_length = int(0.186 * self.sample_rate)
 
             # 終了位置を見つける
             end_idx = len(self.data)
             for i in range(start_idx + silence_length, len(self.data)):
-                if np.all(np.abs(self.data[i - silence_length:i]) < self.threshold / 10):
-                    end_idx = i - silence_length
+                if np.all(np.abs(self.data[i - silence_length:i]) < self.threshold):
+                    end_idx = i
                     break
             self.end_idxs.append(end_idx)
             return end_idx
@@ -59,12 +58,16 @@ class Long_audio:
         if self.predicted_classes is not None:
             print(self.predicted_classes)
     
-    def plot(self, title):
+    def plot(self, title, vline = None):
         plt.figure(figsize=(10, 4))
         plt.plot(self.data)
         plt.title(title)
         plt.xlabel('Samples')
         plt.ylabel('Amplitude')
+        plt.axhline(y=self.threshold, color='r', linestyle='--')
+        if vline is not None:
+            for h in vline:
+                plt.axvline(x=h, color='r', linestyle='--')
         for pt in self.start_idxs:
             plt.axvline(x=pt, color='r', linestyle='--')
         for pt in self.end_idxs:
