@@ -11,6 +11,7 @@ class Audio:
         if len(data.shape) > 1:
             data = data.mean(axis=1)        
         start, end = self.find_start_end(self.sample_rate, data)
+        self.length = end - start
         self.trimmed_data = self.original_data[start:end]
 
     def find_start_end(self, sample_rate, data):
