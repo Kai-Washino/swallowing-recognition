@@ -12,11 +12,11 @@ class VariableDataSet(DataSet):
     def __init__(self, num_samples, scale = 222, time_range = 500, dimension = None):
         self.time_range = time_range
         self.dimension = dimension
-        
+        self.scale = scale
         if dimension is None:
-            self.data = np.zeros((num_samples, scale, self.time_range))
+            self.data = np.zeros((num_samples, self.time_range, self.scale))
         else:
-            self.data = np.zeros((num_samples, scale, self.dimension))
+            self.data = np.zeros((num_samples, self.dimension, self.scale))
         self.labels = np.zeros(num_samples)
         self.max_cols = 0
 
@@ -40,7 +40,11 @@ class VariableDataSet(DataSet):
             data = self.trim_or_pad(normalized_spectrogram)            
         else:
             data = self.pca(normalized_spectrogram)                        
-            
+        
+        if self.dimension is None:
+            data = data.reshape(self.time_range, self.scale)
+        else:
+            data = data.reshape(self.time_range, self.dimension)
         self.data[i] = data
         self.labels[i] = label
 
