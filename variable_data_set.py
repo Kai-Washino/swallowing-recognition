@@ -2,6 +2,7 @@ import numpy as np
 import pathlib
 
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 from .dataset import DataSet
 from .audio import Audio
@@ -32,19 +33,18 @@ class VariableDataSet(DataSet):
             print(spectrogram)
             return 
             
-        min_val = spectrogram.min()
-        max_val = spectrogram.max()
-        normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)
+        scaler_X = MinMaxScaler()        
+        if spectrogram.ndim == 1:
+            spectrogram = spectrogram.reshape(-1, 1)  # 1次元配列を2次元配列に変換               
+        normalized_spectrogram = scaler_X.fit_transform(spectrogram)
             
         if self.dimension is None:                       
-            data = self.trim_or_pad(normalized_spectrogram)            
-        else:
-            data = self.pca(normalized_spectrogram)                        
-        
-        if self.dimension is None:
+            data = self.trim_or_pad(normalized_spectrogram)  
             data = data.reshape(self.time_range, self.scale)
         else:
-            data = data.reshape(self.time_range, self.dimension)
+            data = self.pca(normalized_spectrogram)            
+            data = data.reshape(self.time_range, self.dimension)              
+            
         self.data[i] = data
         self.labels[i] = label
 
