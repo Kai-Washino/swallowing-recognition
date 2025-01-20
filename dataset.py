@@ -23,6 +23,9 @@ class DataSet:
 
     def add_to_dataset(self, i, coefficients, label):
         spectrogram = np.abs(coefficients)
+        if spectrogram.size == 0:
+            print(f"Warning: Spectrogram for index {i} is empty.")
+            return
         min_val = spectrogram.min()
         max_val = spectrogram.max()
         normalized_spectrogram = (spectrogram - min_val) / (max_val - min_val)
