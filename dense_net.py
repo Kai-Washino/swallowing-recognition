@@ -6,7 +6,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import ModelCheckpoint
 import numpy as np
 
-class DanceNet:
+class DenseNet:
     def __init__(self, num_class):
         self.num_class = num_class
         if self.num_class == 2:
@@ -78,7 +78,7 @@ class DanceNet:
 if __name__ == "__main__":
     from .dataset import DataSet
     import pathlib
-    directory_path = pathlib.Path('C:\\Users\\S2\\Documents\\デバイス作成\\2023測定デバイス\\swallowing\\dataset')
+    directory_path = pathlib.Path('C:\\Users\\S2\\Documents\\デバイス作成\\2024測定デバイス\\swallowing\\dataset')
    
     train_voice_folder = directory_path / 'washino' / 'voice'
     train_cough_folder = directory_path / 'washino' / 'cough'
@@ -88,11 +88,11 @@ if __name__ == "__main__":
     test_cough_folder = directory_path / 'shibata' / 'cough'
     test_swallowing_folder = directory_path / 'shibata' / 'swallowing'    
     
-    train_data = DataSet(200, 224, 224, 3, 2)
+    # train_data = DataSet(200, 224, 224, 3, 2)
     test_data = DataSet(28, 224, 224, 3, 2)
 
-    train_data.folder_to_dataset(train_swallowing_folder, np.array(0), 0)
-    train_data.folder_to_dataset(train_cough_folder, np.array(1), 100)    
+    # train_data.folder_to_dataset(train_swallowing_folder, np.array(0), 0)
+    # train_data.folder_to_dataset(train_cough_folder, np.array(1), 100)    
     # train_data.folder_to_dataset(train_voice_folder, np.array([1, 0, 0]), 2)
     # train_data.print_label()
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     test_data.folder_to_dataset(test_cough_folder, np.array(1), 14)
     # test_data.folder_to_dataset(test_voice_folder, np.array([1, 0, 0]), 2)
 
-    model = DanceNet(2)
-    model.training(train_data.data, train_data.labels, 1, 32)
-    model.evaluate(test_data.data, test_data.labels)
+    model = DenseNet(2)
+    # model.training(train_data.data, train_data.labels, 1, 32)
+    model.training(test_data.data, test_data.labels, 1, 32)
     # model.save('20240116_159datasets.keras')
